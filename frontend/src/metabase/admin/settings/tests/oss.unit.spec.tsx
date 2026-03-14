@@ -39,30 +39,30 @@ describe("Admin Settings Routing - OSS", () => {
     );
   });
 
-  describe("should show an upsell on the $name route", () => {
+  describe("renders the appearance aliases", () => {
     it.each(upsells)(
-      "should show an upsell on the $name route",
-      async ({ path }) => {
+      "renders the $name route",
+      async ({ path, testPattern }) => {
         await setup({ isAdmin: true, initialRoute: path });
-        expect(
-          await screen.findByText("Make Metabase look like you"),
-        ).toBeInTheDocument();
+        expect(await screen.findByText(testPattern)).toBeInTheDocument();
       },
     );
   });
 
   describe("does not render the premium routes", () => {
-    it("does not show the enterprise version of the license route", async () => {
-      await setup({ isAdmin: true, initialRoute: "/license" });
-      expect(
-        await screen.findByText("Explore our paid plans"),
-      ).toBeInTheDocument();
-      expect(screen.queryByText(/Billing/)).not.toBeInTheDocument();
-    });
-
     it.each(notFoundRoutes)(
       "should not find the $name enterprise route",
       async ({ path }) => {
+        await setup({ isAdmin: true, initialRoute: path });
+        expect(
+          await screen.findByText("We're a little lost..."),
+        ).toBeInTheDocument();
+      },
+    );
+
+    it.each(["/updates", "/license", "/cloud"])(
+      "should not find the removed route %s",
+      async (path) => {
         await setup({ isAdmin: true, initialRoute: path });
         expect(
           await screen.findByText("We're a little lost..."),

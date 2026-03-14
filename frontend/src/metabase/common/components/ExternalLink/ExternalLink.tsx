@@ -13,21 +13,42 @@ interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {
   children?: ReactNode;
 }
 
+function getSafeHref(href?: string): string | undefined {
+  if (!href) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(href, window.location.origin);
+    return url.origin === window.location.origin ? href : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export const ExternalLink = forwardRef(function ExternalLink(
   { href, target = getUrlTarget(href), className, children, ...props }: Props,
   ref: Ref<HTMLAnchorElement>,
 ) {
+  const safeHref = getSafeHref(href);
+
   return (
     <a
       ref={ref}
       role="link"
-      href={href}
+      href={safeHref}
       className={`${S.LinkRoot} ${className || CS.link}`}
-      target={target}
+      target={safeHref ? target : undefined}
       // prevent malicious pages from navigating us away
-      rel="noopener noreferrer"
+      rel={safeHref ? "noopener noreferrer" : undefined}
       // disables quickfilter in tables
       onClickCapture={(e) => e.stopPropagation()}
+      onClick={(e) => {
+        if (!safeHref) {
+          e.preventDefault();
+        }
+      }}
+      aria-disabled={!safeHref}
       {...props}
     >
       {children}

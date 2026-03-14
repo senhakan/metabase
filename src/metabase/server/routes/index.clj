@@ -80,7 +80,9 @@
 
 (defn- template-parameters
   [embeddable? {:keys [uri params nonce]}]
-  (let [{:keys [anon-tracking-enabled google-auth-client-id], :as public-settings} (setting/user-readable-values-map #{:public})
+  (let [{:keys [anon-tracking-enabled google-auth-client-id], :as public-settings}
+        (appearance/apply-theme-lite-overrides
+         (setting/user-readable-values-map #{:public}))
         ;; We disable `locale` parameter on static embeds/public links (metabase#50313)
         should-load-locale-params? (not embeddable?)]
     {:bootstrapJS            (load-inline-js "index_bootstrap")
@@ -91,12 +93,12 @@
      :nonceJSON              (escape-script (json/encode nonce))
      :language               (hiccup.util/escape-html (or (i18n/user-locale-string) (system/site-locale)))
      :userColorScheme        (escape-script (json/encode (users-settings/color-scheme)))
-     :favicon                (hiccup.util/escape-html (let [custom-favicon (appearance/application-favicon-url)]
+     :favicon                (hiccup.util/escape-html (let [custom-favicon (appearance/resolved-favicon-url)]
                                                         (if (and config/is-dev?
                                                                  (= custom-favicon "app/assets/img/favicon.ico"))
                                                           "app/assets/img/favicon-dev.ico"
                                                           custom-favicon)))
-     :applicationName        (hiccup.util/escape-html (appearance/application-name))
+     :applicationName        (hiccup.util/escape-html (appearance/resolved-application-name))
      :uri                    (hiccup.util/escape-html uri)
      :baseHref               (hiccup.util/escape-html (base-href))
      :embedCode              (when embeddable? (embed/head uri))

@@ -59,8 +59,7 @@
   (system/admin-email! email)
   (when site-locale
     (system/site-locale! site-locale))
-  ;; default to `true` the setting will set itself correctly whether a boolean or boolean string is specified
-  (analytics/anon-tracking-enabled! true))
+  (analytics/anon-tracking-enabled! false))
 
 ;; TODO (Cam 2025-11-25) please add a response schema to this API endpoint, it makes it easier for our customers to
 ;; use our API + we will need it when we make auto-TypeScript-signature generation happen

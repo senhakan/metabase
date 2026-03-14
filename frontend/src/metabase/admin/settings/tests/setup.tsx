@@ -63,17 +63,13 @@ export const ossRoutes: RouteMap = {
     path: "/public-sharing",
     testPattern: /Enable Public Sharing/i,
   },
-  license: { path: "/license", testPattern: /Looking for more/i },
   appearance: {
     path: "/appearance",
-    testPattern: /Make Metabase look like you/i,
+    testPattern: /Application name/i,
   },
-  cloud: { path: "/cloud", testPattern: /Migrate to Metabase Cloud/i },
 };
 
-export const enterpriseRoutes: RouteMap = {
-  license: { path: "/license", testPattern: /License/i, role: "heading" },
-};
+export const enterpriseRoutes: RouteMap = {};
 
 export const premiumRoutes: RouteMap = {
   saml: { path: "/authentication/saml", testPattern: /Set up SAML-based SSO/i },
@@ -81,11 +77,11 @@ export const premiumRoutes: RouteMap = {
 };
 
 export const upsellRoutes: RouteMap = {
-  appearance: { path: "/whitelabel", testPattern: /Color palette/i },
+  appearance: { path: "/whitelabel", testPattern: /Application name/i },
   branding: { path: "/whitelabel/branding", testPattern: /Color palette/i },
   concealMetabase: {
     path: "/whitelabel/conceal-metabase",
-    testPattern: /Application Name/i,
+    testPattern: /Application name/i,
   },
 };
 

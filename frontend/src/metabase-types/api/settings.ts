@@ -529,6 +529,9 @@ interface PublicSettings {
   "application-font-files": FontFile[] | null;
   "application-name": string;
   "application-favicon-url": string;
+  "theme-lite-application-name"?: string;
+  "theme-lite-colors"?: ColorSettings | null;
+  "theme-lite-favicon-url"?: string;
   "available-fonts": string[];
   "available-locales": LocaleData[] | null;
   "available-timezones": string[] | null;

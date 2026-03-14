@@ -162,6 +162,15 @@ function getWithSiteUrl(url: string): string {
   return url.startsWith("/") ? (siteUrl ?? "") + url : url;
 }
 
+function isSafeInternalUrl(url: string): boolean {
+  try {
+    const resolvedUrl = new URL(url, window.location.origin);
+    return resolvedUrl.origin === window.location.origin;
+  } catch {
+    return false;
+  }
+}
+
 // Used for tackling Safari rendering issues
 // http://stackoverflow.com/a/3485654
 export function forceRedraw(domNode: HTMLElement): void {
@@ -209,6 +218,10 @@ export async function open(
   }: OpenOptions = {},
 ): Promise<void> {
   url = ignoreSiteUrl ? url : getWithSiteUrl(url);
+
+  if (!isSafeInternalUrl(url)) {
+    return;
+  }
 
   // In the sdk, allow the host app to override how to open links
   if (isEmbeddingSdk()) {

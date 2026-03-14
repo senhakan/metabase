@@ -27,9 +27,8 @@ const routes = routeObjtoArray({
   ...ossRoutes,
   ...premiumRoutes,
   ...upsellRoutes,
-  ...enterpriseRoutes, // includes the license route
-  cloud: { path: "skip", testPattern: /nope/ },
-}).filter(({ path }) => path !== "skip");
+  ...enterpriseRoutes,
+});
 
 describe("Admin Settings Routing - Enterprise with all features", () => {
   it("renders the settings editor", async () => {
@@ -53,23 +52,5 @@ describe("Admin Settings Routing - Enterprise with all features", () => {
         });
       },
     );
-  });
-
-  it("should show an upsell on the cloud route without hosting", async () => {
-    await setup({
-      initialRoute: "/cloud",
-      features: { hosting: false },
-    });
-    expect(
-      await screen.findByText("Migrate to Metabase Cloud"),
-    ).toBeInTheDocument();
-  });
-
-  it("should show cloud settings on the cloud route without hosting", async () => {
-    await setup({
-      initialRoute: "/cloud",
-      features: { hosting: true },
-    });
-    expect(await screen.findByText("Cloud settings")).toBeInTheDocument();
   });
 });

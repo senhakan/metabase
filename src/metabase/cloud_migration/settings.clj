@@ -41,7 +41,7 @@
   ;; OK, then no it shouldn't be internal at all, internal is literally for Settings that are only visible to backend
   ;; code. -- Cam
   :visibility :admin
-  :default    (store-url-default)
+  :default    ""
   :doc        false
   :export?    false)
 

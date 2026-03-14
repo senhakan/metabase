@@ -17,7 +17,7 @@
   (deferred-tru "Identify when new versions of Metabase are available.")
   :type    :boolean
   :audit   :getter
-  :default true)
+  :default false)
 
 (defsetting upgrade-threshold
   (deferred-tru "Threshold (value in 0-100) indicating at which threshold it should offer an upgrade to the latest major version.")

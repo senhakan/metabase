@@ -11,9 +11,7 @@ export const AdminEmail = () => {
 
   return (
     <span className={QueryBuilderS.QueryErrorAdminEmail}>
-      <a className={CS.noDecoration} href={`mailto:${adminEmail}`}>
-        {adminEmail}
-      </a>
+      <span className={CS.noDecoration}>{adminEmail}</span>
     </span>
   );
 };

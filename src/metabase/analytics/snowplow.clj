@@ -6,7 +6,6 @@
    [metabase.analytics.settings :as analytics.settings]
    [metabase.api.common :as api]
    [metabase.premium-features.core :as premium-features]
-   [metabase.util.log :as log]
    [metabase.util.malli :as mu]
    [metabase.version.core :as version]
    [toucan2.core :as t2])
@@ -82,11 +81,7 @@
   (-> (EmitterConfiguration.)
       (.batchSize 1)))
 
-(defonce ^:private tracker
-  (Snowplow/createTracker
-   ^TrackerConfiguration (tracker-config)
-   ^NetworkConfiguration (network-config)
-   ^EmitterConfiguration (emitter-config)))
+(defonce ^:private tracker nil)
 
 (defn- subject
   "Create a Subject object for a given user ID, to be included in analytics events"
@@ -150,13 +145,4 @@
    (track-event! schema data api/*current-user-id*))
 
   ([schema :- SnowplowSchema data user-id]
-   (when (analytics.settings/snowplow-enabled)
-     (try
-       (let [^SelfDescribing$Builder2 builder (-> (. SelfDescribing builder)
-                                                  (.eventData (payload schema (schema->version schema) data))
-                                                  (.customContext [(context)])
-                                                  (cond-> user-id (.subject (subject user-id))))
-             ^SelfDescribing event (.build builder)]
-         (track-event-impl! tracker event))
-       (catch Throwable e
-         (log/errorf e "Error sending Snowplow analytics event for schema %s" schema))))))
+   nil))

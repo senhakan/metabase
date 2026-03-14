@@ -216,11 +216,13 @@ By default Rspack runs the development server on port `8088`. You can run multip
 Frontend:
 
 - If you are running the frontend with `bun run build-hot`, set the `MB_FRONTEND_DEV_PORT` environment variable: `MB_FRONTEND_DEV_PORT=8089 MB_EDITION=ee bun run build-hot`
+- If you need to access the dev server from another machine or via a LAN IP, set `MB_FRONTEND_DEV_HOST` as well: `MB_FRONTEND_DEV_HOST=10.6.100.170 MB_FRONTEND_DEV_PORT=8080 bun run build-hot`
 - If you are building the frontend statically with `bun run build`, there is nothing different to do
 
 Backend:
 
 - Set the `MB_JETTY_PORT` environment variable and `MB_FRONTEND_DEV_PORT` to the same one as for the frontend.
+- If you're using a non-`localhost` frontend dev host, set `MB_FRONTEND_DEV_HOST` for the backend process too so CSP allows the hot-reload assets.
 
 ### The application database
 

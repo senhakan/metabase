@@ -30,6 +30,7 @@ const SRC_PATH = __dirname + "/frontend/src/metabase";
 const BUILD_PATH = __dirname + "/resources/frontend_client";
 
 const PORT = process.env.MB_FRONTEND_DEV_PORT || 8080;
+const FRONTEND_DEV_HOST = process.env.MB_FRONTEND_DEV_HOST || "localhost";
 const isDevMode = IS_DEV_MODE;
 const shouldEnableHotRefresh = WEBPACK_BUNDLE === "hot";
 
@@ -296,7 +297,7 @@ if (shouldEnableHotRefresh) {
 
   // point the publicPath (inlined in index.html by HtmlWebpackPlugin) to the hot-reloading server
   config.output.publicPath =
-    `http://localhost:${PORT}/` + config.output.publicPath;
+    `http://${FRONTEND_DEV_HOST}:${PORT}/` + config.output.publicPath;
 
   config.devServer = {
     port: PORT, // make the port explicit so it errors if it's already in use
@@ -308,7 +309,7 @@ if (shouldEnableHotRefresh) {
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
-    allowedHosts: ["localhost", ...TEST_CUSTOM_DOMAINS],
+    allowedHosts: ["localhost", FRONTEND_DEV_HOST, ...TEST_CUSTOM_DOMAINS],
     // tweak stats to make the output in the console more legible
     devMiddleware: {
       stats: { preset: "errors-warnings", timings: true },

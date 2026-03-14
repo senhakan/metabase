@@ -1,7 +1,6 @@
 (ns metabase.analytics.settings
   (:require
    [java-time.api :as t]
-   [metabase.config.core :as config]
    [metabase.settings.core :as setting :refer [defsetting]]
    [metabase.util.date-2 :as u.date]
    [metabase.util.i18n :refer [deferred-tru]]
@@ -34,7 +33,7 @@
 (defsetting anon-tracking-enabled
   (deferred-tru "Enable the collection of anonymous usage data in order to help us improve.")
   :type       :boolean
-  :default    true
+  :default    false
   :visibility :public
   :audit      :getter)
 
@@ -44,7 +43,7 @@
         "Should be set via environment variable in Cypress tests or during local development."))
   :type       :boolean
   :visibility :public
-  :default    config/is-prod?
+  :default    false
   :doc        false
   :audit      :never)
 
@@ -62,10 +61,7 @@
 (defsetting snowplow-url
   (deferred-tru "The URL of the Snowplow collector to send analytics events to.")
   :encryption :no
-  :default    (if config/is-prod?
-                "https://sp.metabase.com"
-                ;; See the iglu-schema-registry repo for instructions on how to run Snowplow Micro locally for development
-                "http://localhost:9090")
+  :default    ""
   :visibility :public
   :audit      :never
   :doc        false)

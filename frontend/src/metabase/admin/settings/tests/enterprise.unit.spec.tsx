@@ -50,14 +50,12 @@ describe("Admin Settings Routing - Enterprise without features", () => {
     );
   });
 
-  describe("should show an upsell on the $name route", () => {
+  describe("renders the appearance aliases", () => {
     it.each(upsells)(
-      "should show an upsell on the $name route",
-      async ({ path }) => {
+      "renders the $name route",
+      async ({ path, testPattern }) => {
         await setup({ isAdmin: true, initialRoute: path });
-        expect(
-          await screen.findByText("Make Metabase look like you"),
-        ).toBeInTheDocument();
+        expect(await screen.findByText(testPattern)).toBeInTheDocument();
       },
     );
   });
@@ -66,6 +64,16 @@ describe("Admin Settings Routing - Enterprise without features", () => {
     it.each(notFoundRoutes)(
       "should not find the $name enterprise route",
       async ({ path }) => {
+        await setup({ isAdmin: true, initialRoute: path });
+        expect(
+          await screen.findByText("We're a little lost..."),
+        ).toBeInTheDocument();
+      },
+    );
+
+    it.each(["/updates", "/license", "/cloud"])(
+      "should not find the removed route %s",
+      async (path) => {
         await setup({ isAdmin: true, initialRoute: path });
         expect(
           await screen.findByText("We're a little lost..."),

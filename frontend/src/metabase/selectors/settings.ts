@@ -49,11 +49,14 @@ export type StorePaths =
   /** transforms add-ons management page */
   | "account/transforms";
 
-const DEFAULT_STORE_URL = "https://store.metabase.com/";
+const DEFAULT_STORE_URL = "";
 
 export function getStoreUrl(state: State, path: StorePaths = "") {
   try {
     const storeUrl = getSetting(state, "store-url");
+    if (!storeUrl) {
+      return "";
+    }
     const url = new URL(path, storeUrl);
     return url.toString();
   } catch {
@@ -61,15 +64,11 @@ export function getStoreUrl(state: State, path: StorePaths = "") {
   }
 }
 
-export const migrateToCloudGuideUrl = () =>
-  "https://www.metabase.com/cloud/docs/migrate/guide";
+export const migrateToCloudGuideUrl = () => "";
 
-export const getLearnUrl = (path = "") => {
-  // eslint-disable-next-line metabase/no-unconditional-metabase-links-render -- This is the implementation of getLearnUrl()
-  return `https://www.metabase.com/learn/${path}`;
-};
+export const getLearnUrl = (_path = "") => "";
 
-export const CROWDIN_URL = "https://crowdin.com/project/metabase-i18n";
+export const CROWDIN_URL = "";
 
 export type UtmProps = {
   utm_source?: string;
@@ -125,44 +124,14 @@ export const getDocsUrl = (state: State, props: DocsUrlProps) => {
   return getUrlWithUtm(state, { url, ...props.utm });
 };
 
-export const getDocsSearchUrl = (query: Record<string, string>) =>
-  `https://www.metabase.com/search?${new URLSearchParams(query)}`;
+export const getDocsSearchUrl = (_query: Record<string, string>) => "";
 
 export const getDocsUrlForVersion = (
-  version: Version | undefined,
-  page = "",
-  anchor = "",
+  _version: Version | undefined,
+  _page = "",
+  _anchor = "",
 ) => {
-  let tag = version?.tag;
-  const matches = tag && tag.match(/v[01]\.(\d+)(?:\.\d+)?(-.*)?/);
-
-  if (matches) {
-    if (
-      matches.length > 2 &&
-      matches[2] &&
-      "-snapshot" === matches[2].toLowerCase()
-    ) {
-      // always point -SNAPSHOT suffixes to "latest", since this is likely a development build off of master
-      tag = "latest";
-    } else {
-      // otherwise, it's a regular OSS or EE version string, just link to the major OSS doc link
-      tag = "v0." + matches[1];
-    }
-  } else {
-    // otherwise, just link to the latest tag
-    tag = "latest";
-  }
-
-  if (page) {
-    page = `${page}.html`;
-  }
-
-  if (anchor) {
-    anchor = `#${anchor}`;
-  }
-
-  // eslint-disable-next-line metabase/no-unconditional-metabase-links-render -- This function is only used by this file and "metabase/lib/settings"
-  return `https://www.metabase.com/docs/${tag}/${page}${anchor}`;
+  return "";
 };
 
 interface UpgradeUrlOpts {
@@ -174,27 +143,7 @@ export const getUpgradeUrl = createSelector(
   (state: State) => getPlan(getSetting(state, "token-features")),
   (state: State) => getSetting(state, "active-users-count"),
   (_state: State, utmTags: UpgradeUrlOpts) => utmTags,
-  (plan, count, utmTags) => {
-    const url = new URL("https://www.metabase.com/upgrade");
-    const searchParams = {
-      utm_source: "product",
-      utm_medium: "upsell",
-      utm_campaign: utmTags.utm_campaign,
-      utm_content: utmTags.utm_content,
-      source_plan: plan,
-    };
-    for (const key in searchParams) {
-      const utmValue = searchParams[key as keyof typeof searchParams];
-      if (utmValue) {
-        url.searchParams.append(key, utmValue);
-      }
-    }
-    if (count != null) {
-      url.searchParams.append("utm_users", String(count));
-    }
-
-    return url.toString();
-  },
+  () => "",
 );
 
 /**

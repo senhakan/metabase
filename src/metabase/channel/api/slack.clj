@@ -152,15 +152,5 @@
    {diagnostic-info :diagnosticInfo} :- [:map
                                          ;; TODO FIXME -- this should not use `camelCase` keys
                                          [:diagnosticInfo map?]]]
-  (try
-    (let [bug-report-channel (slack/bug-report-channel)
-          file-content (.getBytes (json/encode diagnostic-info {:pretty true}))
-          file-info (slack/upload-file! file-content "diagnostic-info.json")
-          blocks (create-slack-message-blocks diagnostic-info file-info)]
-      (slack/post-chat-message!
-       {:channel bug-report-channel :blocks blocks})
-      {:success true
-       :file-url (get file-info :permalink_public)})
-    (catch Exception e
-      {:success false
-       :error (.getMessage e)})))
+  {:success false
+   :error "Bug reporting is disabled."})

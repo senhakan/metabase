@@ -5,6 +5,7 @@
    [metabase.api.common :as api]
    [metabase.api.macros :as api.macros]
    [metabase.api.open-api :as open-api]
+   [metabase.appearance.core :as appearance]
    [metabase.auth-identity.core :as auth-identity]
    [metabase.channel.email.messages :as messages]
    [metabase.config.core :as config]
@@ -274,7 +275,8 @@
   "Get all properties and their values. These are the specific `Settings` that are readable by the current user, or are
   public if no user is logged in."
   []
-  (setting/user-readable-values-map (setting/current-user-readable-visibilities)))
+  (appearance/apply-theme-lite-overrides
+   (setting/user-readable-values-map (setting/current-user-readable-visibilities))))
 
 ;; TODO (Cam 10/28/25) -- fix this endpoint route to use kebab-case for consistency with the rest of our REST API
 ;;

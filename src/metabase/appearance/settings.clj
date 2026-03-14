@@ -18,13 +18,13 @@
   :type       :string
   :audit      :getter
   :feature    :whitelabel
-  :default    "Metabase")
+  :default    "AkgunBI")
 
 (defsetting site-name
   (deferred-tru "The name used for this instance of {0}."
                 (setting/application-name-for-setting-descriptions application-name))
   :encryption :no
-  :default    "Metabase"
+  :default    "AkgunBI"
   :audit      :getter
   :visibility :settings-manager
   :export?    true)
@@ -129,6 +129,33 @@ To change the chart colors:
  \"accent7\":\"#E68AD0\"
 }
 ```")
+
+(defsetting theme-lite-application-name
+  (deferred-tru "Optional internal branding override for the application name.")
+  :encryption :no
+  :visibility :public
+  :export?    true
+  :type       :string
+  :default    "AkgunBI"
+  :audit      :getter)
+
+(defsetting theme-lite-colors
+  (deferred-tru "Optional internal branding colors applied without enterprise whitelabeling.")
+  :encryption :no
+  :visibility :public
+  :export?    true
+  :type       :json
+  :default    {}
+  :audit      :getter)
+
+(defsetting theme-lite-favicon-url
+  (deferred-tru "Optional internal branding override for the favicon URL.")
+  :encryption :no
+  :visibility :public
+  :export?    true
+  :type       :string
+  :default    ""
+  :audit      :getter)
 
 (defsetting application-font
   (deferred-tru "Replace “Lato” as the font family.")
@@ -302,7 +329,7 @@ See [fonts](../configuring-metabase/fonts.md).")
   :audit      :getter
   :visibility :public
   :feature    :whitelabel
-  :default    :metabase
+  :default    :hidden
   :setter     (fn [value]
                 (when-not (help-link-options (keyword value))
                   (throw (ex-info (tru "Invalid help link option")
@@ -328,7 +355,7 @@ See [fonts](../configuring-metabase/fonts.md).")
   :visibility :public
   :type       :string
   :audit      :getter
-  :default   "https://www.metabase.com/help/premium"
+  :default   ""
   :feature    :whitelabel
   :setter     (fn [new-value]
                 (let [new-value-string (str new-value)]
@@ -338,7 +365,7 @@ See [fonts](../configuring-metabase/fonts.md).")
 (defsetting show-metabase-links
   (deferred-tru "Whether or not to display Metabase links outside admin settings.")
   :type       :boolean
-  :default    true
+  :default    false
   :visibility :public
   :audit      :getter
   :feature    :whitelabel)

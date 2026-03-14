@@ -21,9 +21,7 @@ function isSafeProtocol(protocol: string) {
 }
 
 export function isDefaultLinkProtocol(protocol: string) {
-  return (
-    protocol === "http:" || protocol === "https:" || protocol === "mailto:"
-  );
+  return protocol === "http:" || protocol === "https:";
 }
 
 export function getUrlProtocol(url: string) {
@@ -58,7 +56,7 @@ export function formatUrl(value: string, options: OptionsType = {}) {
           onClickCapture: async (e: React.MouseEvent<HTMLAnchorElement>) => {
             e.preventDefault(); // Prevent immediately while we await the response
             const result = await handleLinkSdkPlugin(url);
-            if (!result.handled) {
+            if (!result.handled && isSameOrSiteUrlOrigin(url)) {
               // Parent didn't handle it - proceed with default navigation
               window.open(url, "_blank", "noopener");
             }

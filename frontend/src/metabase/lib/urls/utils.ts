@@ -1,4 +1,5 @@
 import api from "metabase/lib/api";
+import { isSameOrSiteUrlOrigin } from "metabase/lib/dom";
 
 export function appendSlug(path: string | number, slug?: string) {
   return slug ? `${path}-${slug}` : String(path);
@@ -45,6 +46,10 @@ export function getSubpathSafeUrl(url: string) {
  * @see {@link getSubpathSafeUrl}
  */
 export const openInNewTab = (url: string) => {
+  if (!isSameOrSiteUrlOrigin(url)) {
+    return;
+  }
+
   window.open(url, "_blank");
 };
 

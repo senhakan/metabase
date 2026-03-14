@@ -171,16 +171,12 @@
                                 :text (truncate (:name dashboard) header-text-limit)
                                 :emoji true}}
         link-section    {:type "section"
-                         :fields (cond-> [{:type "mrkdwn"
-                                           :text (mkdwn-link-text
-                                                  (urls/dashboard-url (:id dashboard) all-params)
-                                                  (format "*Sent from %s by %s*"
-                                                          (appearance/site-name)
-                                                          creator-name))}]
-                                   (include-branding?)
-                                   (conj
-                                    {:type "mrkdwn"
-                                     :text  "Made with Metabase :blue_heart:"}))}
+                         :fields [{:type "mrkdwn"
+                                   :text (mkdwn-link-text
+                                          (urls/dashboard-url (:id dashboard) all-params)
+                                          (format "*Sent from %s by %s*"
+                                                  (appearance/site-name)
+                                                  creator-name))}]}
         filter-fields   (for [parameter top-level-params]
                           {:type "mrkdwn"
                            :text (parameter-markdown parameter)})

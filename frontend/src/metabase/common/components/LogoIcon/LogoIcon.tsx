@@ -20,7 +20,7 @@ export const DefaultLogoIcon = ({
     <svg
       className={cx(
         "Icon",
-        { [CS.textMetabaseBrand]: !dark },
+        { [CS.textBrand]: !dark },
         { [CS.textWhite]: dark },
       )}
       viewBox="0 0 212 256"

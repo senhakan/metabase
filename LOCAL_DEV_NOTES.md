@@ -1,117 +1,215 @@
 # Local Dev Notes
 
-Bu dosya, `/root/metabase` altında yaptigimiz yerel gelistirme hazirligini kayit altina alir.
+Bu dosya, `/root/metabase` altinda yaptigimiz ortam hazirligi, rebrand, admin sadeleştirme, upsell temizligi ve dis baglanti sertlestirmelerini tekrar uygulanabilir sekilde kayit altina alir.
 
-## Repo Durumu
+## Repo Ve Git
 
-- Calisma dizini: `/root/metabase`
-- Aktif branch: `master`
-- Son gorulen HEAD: `fb2d36af34b4adeb9668992b3381f1e168626d05`
+- repo: `/root/metabase`
+- branch: `master`
 - `origin`: `https://github.com/senhakan/metabase.git`
 - `upstream`: `https://github.com/metabase/metabase.git`
-
-## Git Ayarlari
-
 - `user.name`: `senhakan`
 - `user.email`: `hakan.sen@live.com`
 - `gh auth login` yapildi
-- `gh auth setup-git` yapildi
-- HTTPS push calisiyor
+- HTTPS push aktif
 
-## Ortam Hazirligi
+## Toolchain
 
-`mise` kuruldu ve `~/.bashrc` icine aktivasyon eklendi.
-
-Yeni shell acildiginda gerekirse:
+- `mise` kurulu
+- shell icin:
 
 ```bash
 source ~/.bashrc
+eval "$(/root/.local/bin/mise activate bash)"
 ```
 
-Repo icin hedef arac surumleri:
+- surumler:
+  - Node `22.13.1`
+  - Bun `1.3.7`
+  - Java `21.0.9`
+  - Clojure CLI `1.12.3`
+  - Babashka `1.12.212`
 
-- Node: `22.13.1`
-- Bun: `1.3.7`
-- Java: `21.0.9`
-- Clojure CLI: `1.12.3`
-- Babashka: `1.12.212`
+## Dev Komutlari
 
-Not:
+Enterprise classpath gerektiren bu fork icin ana komut:
 
-- `source ~/.bashrc` yapmadan sistem `node` surumu gorunebilir
-- Repo icinde dogru surumleri almak icin `mise` aktif shell kullan
+```bash
+cd /root/metabase
+source ~/.bashrc
+MB_FRONTEND_DEV_HOST=10.6.100.170 bun run dev-ee
+```
 
-## Yapilan Hazirliklar
+Adresler:
 
-- Repo klonlandi
-- `origin` ve `upstream` remote ayarlandi
-- `bun install` tamamlandi
-- `./bin/mage doctor` basarili gecti
-- Ornek bos commit olusturulup push edildi
+- uygulama: `http://10.6.100.170:3000`
+- frontend dev server: `http://10.6.100.170:8080`
+
+Notlar:
+
+- `bun run dev` bazen enterprise namespace hatasi uretebilir
+- H2 + hot start ilk acilista yavas olabilir
 
 ## Build Olcumleri
 
-Frontend tam build komutu:
-
 ```bash
+cd /root/metabase
 source ~/.bashrc
 bun run build
 ```
 
-Olculen sureler:
+- cold build: `4:40.24`
+- warm build: `3:02.36`
 
-- Ilk cold build: `4:40.24`
-- Ikinci warm build: `3:02.36`
+## Dis IP Destegi
 
-## Canli Gelistirme
+Dis IP uzerinden asset URL uretilmesi icin env tabanli patch yapildi:
 
-Standart yerel kullanim:
-
-```bash
-cd /root/metabase
-source ~/.bashrc
-bun run dev
-```
-
-Beklenen adresler:
-
-- Uygulama: `http://localhost:3000`
-- Frontend hot server: `http://localhost:8080`
-
-## Dis IP ile Erisim
-
-`http://10.6.100.170:3000` uzerinden erisim icin dev modda frontend asset URL'leri `localhost:8080` yerine dis host ile uretilmeliydi.
-
-Bunun icin env tabanli, varsayilan davranisi bozmayan patch yapildi:
-
-- [`rspack.main.config.js`](/root/metabase/rspack.main.config.js)
-- [`src/metabase/server/middleware/security.clj`](/root/metabase/src/metabase/server/middleware/security.clj)
-- [`docs/developers-guide/devenv.md`](/root/metabase/docs/developers-guide/devenv.md)
+- `rspack.main.config.js`
+- `src/metabase/server/middleware/security.clj`
+- `docs/developers-guide/devenv.md`
 
 Davranis:
 
-- Varsayilan host hala `localhost`
-- Sadece `MB_FRONTEND_DEV_HOST` verilirse dis host kullanilir
+- varsayilan host `localhost`
+- sadece `MB_FRONTEND_DEV_HOST` verilirse dis host kullanilir
 
-Dis IP ile gelistirme icin:
+## Rebrand
 
-```bash
-cd /root/metabase
-source ~/.bashrc
-MB_FRONTEND_DEV_HOST=10.6.100.170 bun run dev
-```
+Marka `AkgunBI` olarak ayarlandi.
 
-Bu durumda hedef adresler:
+Uygulanan alanlar:
 
-- Uygulama: `http://10.6.100.170:3000`
-- Frontend hot server: `http://10.6.100.170:8080`
+- `application-name`
+- `site-name`
+- `theme-lite-application-name`
+- web manifest adi
+- browser title
+- bootstrap localization (`Metabase -> AkgunBI`)
+- frontend English fallback localization (`Metabase -> AkgunBI`)
 
-## Dikkat Notlari
+Baslica dosyalar:
 
-- `bun run dev` ilk acilista H2 migration ve sample database setup nedeniyle yavas olabilir
-- Backend `3000` portu frontend'den daha gec hazir olabilir
-- Dev ortam kapatmak icin calisan terminalde `Ctrl+C`
-- H2 kullanim uyarisi sadece production icin onemli; gelistirme icin kabul edilebilir
+- `src/metabase/appearance/settings.clj`
+- `src/metabase/appearance/core.clj`
+- `src/metabase/server/routes/index.clj`
+- `frontend/src/metabase/lib/i18n.js`
+- `frontend/src/metabase-types/api/mocks/settings.ts`
+- `resources/frontend_client/app/assets/img/site.webmanifest`
+
+## Theme Management
+
+Premium appearance yerine hafif bir ic tema yonetim ekrani eklendi.
+
+Kapsam:
+
+- uygulama adi
+- favicon
+- tema renkleri
+
+Dosyalar:
+
+- `frontend/src/metabase/admin/settings/components/SettingsPages/ThemeManagementSettingsPage.tsx`
+- `frontend/src/metabase/admin/settings/components/widgets/ThemeLiteColorSettingsWidget.tsx`
+- `frontend/src/metabase/admin/settings/components/SettingsPages/AppearanceSettingsPage.tsx`
+- `frontend/src/metabase/lib/colors/colors.ts`
+
+## Admin Sadeleştirme
+
+Kaldirilan/gizlenen alanlar:
+
+- `Updates`
+- `License`
+- `Cloud`
+- Store link / paid features alanlari
+- trial banner
+- license activation banner
+- premium upsell alanlari
+- `Tools -> Help` menusu ve route'u
+
+Baslica dosyalar:
+
+- `frontend/src/metabase/admin/settings/components/SettingsNav/SettingsNav.tsx`
+- `frontend/src/metabase/admin/settingsRoutes.tsx`
+- `frontend/src/metabase/common/components/AppBanner/AppBanner.tsx`
+- `frontend/src/metabase/nav/components/StoreLink/StoreLink.tsx`
+- `frontend/src/metabase/nav/components/TrialBanner/TrialBanner.tsx`
+- `frontend/src/metabase/nav/components/LicenseTokenMissingBanner/LicenseTokenMissingBanner.tsx`
+- `frontend/src/metabase/admin/tools/components/ToolsApp.tsx`
+- `frontend/src/metabase/admin/routes.tsx`
+
+## Upsell Temizligi
+
+Ortak premium reklam yuzeyleri no-op yapildi:
+
+- `UpsellWrapper`
+- `UpgradeModal`
+- `UpsellGem`
+- `UpsellSdkLink`
+- embedding settings upsell banner
+
+Dosyalar:
+
+- `frontend/src/metabase/common/components/upsells/components/UpsellWrapper.tsx`
+- `frontend/src/metabase/common/components/upsells/components/UpgradeModal/UpgradeModal.tsx`
+- `frontend/src/metabase/common/components/upsells/components/UpsellGem.tsx`
+- `frontend/src/metabase/admin/upsells/UpsellSdkLink.tsx`
+- `frontend/src/metabase/admin/settings/components/EmbeddingSettings/SharedCombinedEmbeddingSettings/SharedCombinedEmbeddingSettings.tsx`
+
+## Dis Baglanti Ve Telemetri Sertlestirme
+
+Urunun kendi outbound yuzeyleri kapatildi:
+
+- backend snowplow event gonderimi
+- frontend analytics bootstrap
+- bug report -> Slack gonderimi
+- help/store/docs/upgrade link ureticileri
+- same-origin disi external linkler
+- off-origin programatik navigation
+- varsayilan map tile dis servisi
+
+Session properties ile dogrulanan kapali degerler:
+
+- `anon-tracking-enabled = false`
+- `bug-reporting-enabled = false`
+- `check-for-updates = false`
+- `snowplow-enabled = false`
+- `snowplow-url = ""`
+- `analytics-uuid = ""`
+- `help-link = hidden`
+- `show-metabase-links = false`
+- `store-url = ""`
+- `map-tile-server-url = ""`
+
+Baslica dosyalar:
+
+- `src/metabase/analytics/settings.clj`
+- `src/metabase/analytics/snowplow.clj`
+- `src/metabase/channel/api/slack.clj`
+- `src/metabase/cloud_migration/settings.clj`
+- `src/metabase/tiles/settings.clj`
+- `src/metabase/version/settings.clj`
+- `src/metabase/setup_rest/api.clj`
+- `frontend/src/metabase/common/components/ExternalLink/ExternalLink.tsx`
+- `frontend/src/metabase/lib/dom.ts`
+- `frontend/src/metabase/lib/urls/utils.ts`
+- `frontend/src/metabase/lib/formatting/url.tsx`
+- `frontend/src/metabase/lib/analytics-untyped.js`
+- `frontend/src/metabase/common/utils/help-url.ts`
+- `frontend/src/metabase/selectors/settings.ts`
+- `frontend/src/metabase/nav/components/AppSwitcher/useHelpLink.ts`
+- `frontend/src/metabase/embedding/embedding-hub/hooks/use-help-url.ts`
+
+## Canli Commit Gecmisi
+
+Toplu commit:
+
+- `67a40a636d` `feat: rebrand and harden internal deployment`
+
+Not:
+
+- sonraki degisikliklerden sonra `git status --short` ile kontrol et
+- bu dosya, ayni kurulumu yeniden yapmak icin ana referans olsun
 
 ## Sonraki Oturumda Hizli Baslangic
 
@@ -119,13 +217,12 @@ Bu durumda hedef adresler:
 cd /root/metabase
 source ~/.bashrc
 git status --short --branch
-MB_FRONTEND_DEV_HOST=10.6.100.170 bun run dev
+MB_FRONTEND_DEV_HOST=10.6.100.170 bun run dev-ee
 ```
 
-Sadece yerel makineden calisacaksan:
+Hizli kontroller:
 
 ```bash
-cd /root/metabase
-source ~/.bashrc
-bun run dev
+curl -s http://10.6.100.170:3000/api/session/properties | rg 'anon-tracking-enabled|bug-reporting-enabled|check-for-updates|snowplow-enabled|help-link|store-url|show-metabase-links|map-tile-server-url'
+curl -s http://10.6.100.170:3000/ | rg 'AkgunBI|_metabaseUserLocalization|_metabaseSiteLocalization'
 ```

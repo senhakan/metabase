@@ -31,7 +31,6 @@ import {
   EmbeddingSettings,
   GuestEmbedsSettings,
 } from "metabase/admin/settings/components/EmbeddingSettings";
-import { Help } from "metabase/admin/tools/components/Help";
 import { JobInfoApp } from "metabase/admin/tools/components/JobInfoApp";
 import { JobTriggersModal } from "metabase/admin/tools/components/JobTriggersModal";
 import { LogLevelsModal } from "metabase/admin/tools/components/LogLevelsModal";
@@ -54,7 +53,6 @@ import {
   PLUGIN_CACHING,
   PLUGIN_DB_ROUTING,
   PLUGIN_DEPENDENCIES,
-  PLUGIN_SUPPORT,
   PLUGIN_TENANTS,
   PLUGIN_WRITABLE_CONNECTION,
 } from "metabase/plugins";
@@ -270,7 +268,7 @@ export const getRoutes = (
 
         <Route path="tools" component={createAdminRouteGuard("tools")}>
           <Route component={ToolsApp}>
-            <IndexRedirect to="help" />
+            <IndexRedirect to="tasks" />
             <Route
               key="error-overview"
               path="errors"
@@ -280,14 +278,6 @@ export const getRoutes = (
             />
             <Route path="model-caching" component={ModelCachePage}>
               <ModalRoute path=":jobId" modal={ModelCacheRefreshJobModal} />
-            </Route>
-            <Route path="help" component={Help}>
-              {PLUGIN_SUPPORT.isEnabled && (
-                <ModalRoute
-                  modal={PLUGIN_SUPPORT.GrantAccessModal}
-                  path="grant-access"
-                />
-              )}
             </Route>
             <Route path="tasks">{getTasksRoutes()}</Route>
             <Route path="jobs" component={JobInfoApp}>

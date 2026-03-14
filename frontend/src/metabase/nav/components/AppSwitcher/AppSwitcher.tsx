@@ -10,10 +10,6 @@ import { ForwardRefLink } from "metabase/common/components/Link";
 import { userInitials } from "metabase/common/utils/user";
 import { trackDataStudioOpened } from "metabase/data-studio/analytics";
 import { canAccessDataStudio as canAccessDataStudioSelector } from "metabase/data-studio/selectors";
-import {
-  getCanAccessOnboardingPage,
-  getIsNewInstance,
-} from "metabase/home/selectors";
 import type { ColorName } from "metabase/lib/colors/types";
 import { useDispatch, useSelector } from "metabase/lib/redux";
 import * as Urls from "metabase/lib/urls";
@@ -56,9 +52,7 @@ export const AppSwitcher = ({ className }: { className?: string }) => {
   // generate the proper set of list items for the current user
   // based on whether they're an admin or not
   const adminItems = useSelector(getAdminPaths);
-  const canAccessOnboardingPage = useSelector(getCanAccessOnboardingPage);
   const canAccessDataStudio = useSelector(canAccessDataStudioSelector);
-  const isNewInstance = useSelector(getIsNewInstance);
   const helpLink = useHelpLink();
 
   const openModal = (modalName: string) => {
@@ -139,9 +133,6 @@ export const AppSwitcher = ({ className }: { className?: string }) => {
     );
   }, [canAccessDataStudio, adminItems, currentApp]);
 
-  // If the instance is not new, we remove the link from the sidebar automatically and show it here instead!
-  const showOnboardingLink = !isNewInstance && canAccessOnboardingPage;
-
   return (
     <>
       <Menu position="bottom-end" shadow="md" width={200} offset={9}>
@@ -219,13 +210,6 @@ export const AppSwitcher = ({ className }: { className?: string }) => {
                     {t`Get help`}
                   </Menu.Item>
                 )}
-                {showOnboardingLink && (
-                  <Menu.Item component={ForwardRefLink} to="/getting-started">
-                    {/* eslint-disable-next-line metabase/no-literal-metabase-strings -- This string only shows for non-whitelabeled instances */}
-                    {t`How to use Metabase`}
-                  </Menu.Item>
-                )}
-
                 <Menu.Item
                   onClick={() => dispatch(setOpenModal("help"))}
                 >{t`Keyboard shortcuts`}</Menu.Item>

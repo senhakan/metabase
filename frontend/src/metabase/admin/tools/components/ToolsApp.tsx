@@ -23,12 +23,6 @@ export function ToolsApp({ location, children }: ToolsAppProps) {
       sidebar={
         <AdminNavWrapper>
           <ToolsNavItem
-            label={t`Help`}
-            path={Urls.adminToolsHelp()}
-            icon="info"
-            location={location}
-          />
-          <ToolsNavItem
             label={t`Tasks`}
             path={Urls.adminToolsTasksBase()}
             icon="clipboard"

@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 
 import { LighthouseIllustration } from "metabase/common/components/LighthouseIllustration";
-import { LogoIcon } from "metabase/common/components/LogoIcon";
 import { useSelector } from "metabase/lib/redux";
 import { getLoginPageIllustration } from "metabase/selectors/whitelabel";
 
@@ -30,7 +29,6 @@ export const AuthLayout = ({ children }: AuthLayoutProps): JSX.Element => {
           />
         ))}
       <LayoutBody>
-        <LogoIcon height={65} />
         <LayoutCard>{children}</LayoutCard>
       </LayoutBody>
     </LayoutRoot>

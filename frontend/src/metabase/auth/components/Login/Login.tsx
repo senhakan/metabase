@@ -5,7 +5,6 @@ import _ from "underscore";
 import { usePageTitle } from "metabase/hooks/use-page-title";
 import { useSelector } from "metabase/lib/redux";
 import type { AuthProvider } from "metabase/plugins/types";
-import { getApplicationName } from "metabase/selectors/whitelabel";
 import { Box, Divider } from "metabase/ui";
 
 import { getAuthProviders } from "../../selectors";
@@ -28,7 +27,6 @@ export const Login = ({ params, location }: LoginProps): JSX.Element => {
   const providers = useSelector(getAuthProviders);
   const selection = getSelectedProvider(providers, params?.provider);
   const redirectUrl = location?.query?.redirect;
-  const applicationName = useSelector(getApplicationName);
 
   usePageTitle(t`Login`);
 
@@ -46,7 +44,7 @@ export const Login = ({ params, location }: LoginProps): JSX.Element => {
         lh="1.5rem"
         ta="center"
       >
-        {t`Sign in to ${applicationName}`}
+        {t`Sign in`}
       </Box>
       {selection && selection.Panel && (
         <Box mt="2.5rem">

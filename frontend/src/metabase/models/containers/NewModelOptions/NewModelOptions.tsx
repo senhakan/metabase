@@ -7,17 +7,14 @@ import { useSelector } from "metabase/lib/redux";
 import * as Urls from "metabase/lib/urls";
 import NewModelOption from "metabase/models/components/NewModelOption";
 import { NoDatabasesEmptyState } from "metabase/reference/databases/NoDatabasesEmptyState";
-import { getLearnUrl, getSetting } from "metabase/selectors/settings";
+import { getSetting } from "metabase/selectors/settings";
 import {
   canUserCreateNativeQueries,
   canUserCreateQueries,
 } from "metabase/selectors/user";
-import { getShowMetabaseLinks } from "metabase/selectors/whitelabel";
 import { Group } from "metabase/ui";
 
-import { EducationalButton, OptionsRoot } from "./NewModelOptions.styled";
-
-const EDUCATIONAL_LINK = getLearnUrl("metabase-basics/getting-started/models");
+import { OptionsRoot } from "./NewModelOptions.styled";
 
 interface NewModelOptionsProps {
   location: Location;
@@ -34,9 +31,6 @@ const NewModelOptions = ({ location }: NewModelOptionsProps) => {
   const collectionId = Urls.extractEntityId(
     location.query.collectionId as string,
   );
-
-  const showMetabaseLinks = useSelector(getShowMetabaseLinks);
-
   if (!hasDataAccess && !hasNativeWrite) {
     return (
       <div
@@ -85,16 +79,6 @@ const NewModelOptions = ({ location }: NewModelOptionsProps) => {
           </div>
         )}
       </Group>
-
-      {showMetabaseLinks && (
-        <EducationalButton
-          target="_blank"
-          href={EDUCATIONAL_LINK}
-          className={CS.mt4}
-        >
-          {t`What's a model?`}
-        </EducationalButton>
-      )}
     </OptionsRoot>
   );
 };

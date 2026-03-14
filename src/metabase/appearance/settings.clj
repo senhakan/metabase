@@ -145,7 +145,17 @@ To change the chart colors:
   :visibility :public
   :export?    true
   :type       :json
-  :default    {}
+  :default    {:brand     "#1F6F78"
+               :filter    "#2D8C95"
+               :summarize "#C86B4A"
+               :accent0   "#1F6F78"
+               :accent1   "#2D8C95"
+               :accent2   "#5FB3B3"
+               :accent3   "#F0A35E"
+               :accent4   "#C86B4A"
+               :accent5   "#6F8FC9"
+               :accent6   "#8C72C9"
+               :accent7   "#C97AA8"}
   :audit      :getter)
 
 (defsetting theme-lite-favicon-url

@@ -6,13 +6,11 @@ import CS from "metabase/css/core/index.css";
 import { Collapse, Group, Icon, UnstyledButton } from "metabase/ui";
 
 import { PaddedSidebarLink, SidebarHeading } from "../MainNavbar.styled";
-import { trackOnboardingChecklistOpened } from "../analytics";
 import type { SelectedItem } from "../types";
 
 import { useAddDataPermissions } from "./AddDataModal/use-add-data-permission";
 
 export const GettingStartedSection = ({
-  nonEntityItem,
   onAddDataModalOpen,
   children,
 }: PropsWithChildren<{
@@ -21,9 +19,6 @@ export const GettingStartedSection = ({
 }>) => {
   const { canPerformMeaningfulActions } = useAddDataPermissions();
   const [opened, { toggle }] = useDisclosure(true);
-
-  const ONBOARDING_URL = "/getting-started";
-  const isOnboardingPageSelected = nonEntityItem?.url === ONBOARDING_URL;
 
   return (
     <div aria-selected={opened} role="tab">
@@ -51,16 +46,6 @@ export const GettingStartedSection = ({
             {t`Add your data`}
           </PaddedSidebarLink>
         )}
-
-        <PaddedSidebarLink
-          icon="learn"
-          url={ONBOARDING_URL}
-          isSelected={isOnboardingPageSelected}
-          onClick={() => trackOnboardingChecklistOpened()}
-        >
-          {/* eslint-disable-next-line metabase/no-literal-metabase-strings -- We only show this to non-whitelabelled instances */}
-          {t`How to use Metabase`}
-        </PaddedSidebarLink>
 
         {children}
       </Collapse>

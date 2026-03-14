@@ -3,10 +3,8 @@ import { t } from "ttag";
 import _ from "underscore";
 
 import { skipToken, useListRecentsQuery } from "metabase/api";
-import { ExternalLink } from "metabase/common/components/ExternalLink";
 import { ForwardRefLink } from "metabase/common/components/Link";
 import { DelayedLoadingAndErrorWrapper } from "metabase/common/components/LoadingAndErrorWrapper/DelayedLoadingAndErrorWrapper";
-import { useDocsUrl } from "metabase/common/hooks";
 import { useFetchModels } from "metabase/common/hooks/use-fetch-models";
 import { useSelector } from "metabase/lib/redux";
 import {
@@ -20,8 +18,6 @@ import {
 } from "metabase/selectors/user";
 import {
   ActionIcon,
-  Box,
-  Button,
   Flex,
   Group,
   Icon,
@@ -38,8 +34,6 @@ import {
   BrowseSection,
 } from "../components/BrowseContainer.styled";
 
-import { ModelsVideo } from "./EmptyStates";
-import { ModelExplanationBanner } from "./ModelExplanationBanner";
 import { ModelsTable } from "./ModelsTable";
 import { RecentModels } from "./RecentModels";
 import { trackNewModelInitiated } from "./analytics";
@@ -56,8 +50,6 @@ export const BrowseModels = () => {
   const [modelFilters, setModelFilters] = useModelFilterSettings();
   const { isLoading, error, models, recentModels, hasVerifiedModels } =
     useFilteredModels(modelFilters);
-
-  const { showMetabaseLinks, url } = useDocsUrl("data-modeling/models");
 
   const isEmpty = !isLoading && !error && models.length === 0;
   const titleId = useMemo(() => _.uniqueId("browse-models"), []);
@@ -116,11 +108,6 @@ export const BrowseModels = () => {
           <Stack mb="lg" gap="md" w="100%">
             {isEmpty ? (
               <Stack gap="lg" align="center" data-testid="empty-state">
-                {showMetabaseLinks && (
-                  <Box maw="45rem" w="100%">
-                    <ModelsVideo autoplay={0} />
-                  </Box>
-                )}
                 <Stack gap="xs" maw="28rem">
                   <Title
                     order={3}
@@ -128,15 +115,9 @@ export const BrowseModels = () => {
                   >{t`Create models to clean up and combine tables to make your data easier to explore`}</Title>
                   <Text ta="center">{t`Models are somewhat like virtual tables: do all your joins and custom columns once, save it as a model, then query it like a table.`}</Text>
                 </Stack>
-                {showMetabaseLinks && (
-                  <Button variant="subtle" p={0}>
-                    <ExternalLink href={url}>{t`Read the docs`}</ExternalLink>
-                  </Button>
-                )}
               </Stack>
             ) : (
               <>
-                <ModelExplanationBanner />
                 <DelayedLoadingAndErrorWrapper
                   error={error}
                   loading={isLoading}

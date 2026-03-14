@@ -30,13 +30,13 @@ interface PluginDashboardSubscriptionParametersSectionOverride {
 }
 
 const defaultLandingPageIllustration = {
-  src: "app/img/bridge.svg",
-  isDefault: true,
+  src: "app/img/new_hs.png",
+  isDefault: false,
 };
 
 const defaultLoginPageIllustration = {
-  src: "app/img/bridge.svg",
-  isDefault: true,
+  src: "app/img/new_hs.png",
+  isDefault: false,
 };
 
 const getLoadingMessage = (isSlow: boolean | undefined = false) =>

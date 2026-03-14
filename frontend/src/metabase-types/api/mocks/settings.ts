@@ -175,7 +175,21 @@ export const createMockSettings = (
   "application-name": "AkgunBI",
   "application-favicon-url": "",
   "theme-lite-application-name": "AkgunBI",
-  "theme-lite-colors": {},
+  /* eslint-disable metabase/no-color-literals */
+  "theme-lite-colors": {
+    brand: "#1F6F78",
+    filter: "#2D8C95",
+    summarize: "#C86B4A",
+    accent0: "#1F6F78",
+    accent1: "#2D8C95",
+    accent2: "#5FB3B3",
+    accent3: "#F0A35E",
+    accent4: "#C86B4A",
+    accent5: "#6F8FC9",
+    accent6: "#8C72C9",
+    accent7: "#C97AA8",
+  },
+  /* eslint-enable metabase/no-color-literals */
   "theme-lite-favicon-url": "",
   "available-fonts": [],
   "available-locales": [

@@ -40,7 +40,37 @@
 
     "translations"
     {"" {"Metabase" {"msgid"  "Metabase"
-                     "msgstr" ["Metabase"]}}}}))
+                     "msgstr" [(appearance/resolved-application-name)]}}}}))
+
+(defn- with-branded-localization [localization-json]
+  (let [app-name (appearance/resolved-application-name)
+        localization (or (json/decode localization-json) {})]
+    (letfn [(replace-brand [value]
+              (cond
+                (string? value)
+                (str/replace value "Metabase" app-name)
+
+                (vector? value)
+                (mapv replace-brand value)
+
+                (and (map? value) (contains? value "msgstr"))
+                (update value "msgstr" replace-brand)
+
+                :else
+                value))]
+      (json/encode
+       (-> localization
+           (update "translations"
+                   (fn [translations]
+                     (into {}
+                           (for [[context entries] translations]
+                             [context
+                              (into {}
+                                    (for [[msgid entry] entries]
+                                      [msgid (replace-brand entry)]))]))))
+           (assoc-in ["translations" "" "Metabase"]
+                     {"msgid" "Metabase"
+                      "msgstr" [app-name]}))))))
 
 (defn- localization-json-file-name [locale-string]
   (format "frontend_client/app/locales/%s.json" (str/replace locale-string \- \_)))
@@ -63,7 +93,8 @@
   (defn- load-localization
     "Load a JSON-encoded map of localized strings for the current user's Locale."
     [locale-override]
-    (load-fn (or locale-override (i18n/user-locale-string)))))
+    (with-branded-localization
+      (load-fn (or locale-override (i18n/user-locale-string))))))
 
 (defn- load-inline-js* [resource-name]
   (slurp (io/resource (format "frontend_client/inline_js/%s.js" resource-name))))
